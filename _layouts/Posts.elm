@@ -2,7 +2,7 @@ module Posts exposing (main)
 
 import Elmstatic exposing (..)
 import Html exposing (..)
-import Html.Attributes as Attr exposing (alt, attribute, class, href, src)
+import Html.Attributes exposing (attribute, class, href)
 import Page
 import Post
 
@@ -11,7 +11,7 @@ main : Elmstatic.Layout
 main =
     let
         postItem post =
-            div []
+            div [ class "post-list-item" ]
                 [ a [ href ("/" ++ post.link) ] [ h2 [] [ text post.title ] ]
                 , Post.metadataHtml post
                 ]
@@ -21,7 +21,10 @@ main =
                 [ text "No posts yet!" ]
 
             else
-                List.map postItem posts
+                [ div [ attribute "data-post-list" "", attribute "data-page-size" "5" ]
+                    (List.map postItem posts)
+                , Elmstatic.script "/pagination.js"
+                ]
 
         sortPosts posts =
             List.sortBy .date posts
